@@ -13,7 +13,7 @@ struct City {
     std::vector<Language> languages;
 };
 
-struct CountryParams {
+struct Country {
     std::string name;
     std::string iso_code;
     std::string phone_code;
@@ -22,7 +22,7 @@ struct CountryParams {
 };
 
 // Дана функция ParseCitySubjson, обрабатывающая JSON-объект со списком городов конкретной страны:
-void ParseCitySubjson(vector<City>& cities, const Json& json, const CountryParams params) {
+void ParseCitySubjson(vector<City>& cities, const Json& json, const Country params) {
     for (const auto& city_json : json.AsList()) {
         const auto& city_obj = city_json.AsObject();
         cities.push_back({ .name = city_obj["name"s].AsString(), 
@@ -50,8 +50,8 @@ void ParseCountryJson(vector<Country>& countries, vector<City>& cities, const Js
             country.languages.push_back(FromString<Language>(lang_obj.AsString()));
         }
         ParseCitySubjson(cities, country_obj["cities"s], 
-            { .country_name = country.name,
-              .counrty_iso_code = country.iso_code,
+            { .name = country.name,
+              .iso_code = country.iso_code,
               .phone_code = country.phone_code,
               .time_zone = country.time_zone,
               .languages = country.languages
