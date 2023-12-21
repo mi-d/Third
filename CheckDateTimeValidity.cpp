@@ -1,46 +1,31 @@
+#include <string_view>
+
+void CheckLowerBound(int value, std::string_view name, int border) {
+    if (value < border) {
+        throw domain_error(name + " is too small"s);
+    }
+}
+
+void CheckUpperBound(int value, std::string_view name, int border) {
+    if (value > border) {
+        throw domain_error(name + " is too big"s);
+    }
+}
+
 void CheckDateTimeValidity(const DateTime& dt) {
-    if (dt.year < 1) {
-        throw domain_error("year is too small"s);
-    }
-    if (dt.year > 9999) {
-        throw domain_error("year is too big"s);
-    }
-
-    if (dt.month < 1) {
-        throw domain_error("month is too small"s);
-    }
-    if (dt.month > 12) {
-        throw domain_error("month is too big"s);
-    }
-
+    using namespace std::literals;
+    CheckLowerBound(dt.year, "year"sv, 1);
+    CheckUpperBound(dt.year, "year"sv, 9999);
+    CheckLowerBound(dt.month, "month"sv, 1);
+    CheckUpperBound(dt.month, "month"sv, 12);
     const bool is_leap_year = (dt.year % 4 == 0) && !(dt.year % 100 == 0 && dt.year % 400 != 0);
     const array month_lengths = { 31, 28 + is_leap_year, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-    if (dt.day < 1) {
-        throw domain_error("day is too small"s);
-    }
-    if (dt.day > month_lengths[dt.month - 1]) {
-        throw domain_error("day is too big"s);
-    }
-
-    if (dt.hour < 0) {
-        throw domain_error("hour is too small"s);
-    }
-    if (dt.hour > 23) {
-        throw domain_error("hour is too big"s);
-    }
-
-    if (dt.minute < 0) {
-        throw domain_error("minute is too small"s);
-    }
-    if (dt.minute > 59) {
-        throw domain_error("minute is too big"s);
-    }
-
-    if (dt.second < 0) {
-        throw domain_error("second is too small");
-    }
-    if (dt.second > 59) {
-        throw domain_error("second is too big"s);
-    }
+    CheckLowerBound(dt.day, "day"sv, 1);
+    CheckUpperBound(dt.day, "day"sv, month_lengths[dt.month - 1]);
+    CheckLowerBound(dt.hour, "hour"sv, 0);
+    CheckUpperBound(dt.hour, "hour"sv, 23);
+    CheckLowerBound(dt.minute, "minute"sv, 0);
+    CheckUpperBound(dt.minute, "minute"sv, 59);
+    CheckLowerBound(dt.second, "second"sv, 0);
+    CheckUpperBound(dt.second, "second"sv, 59);
 }
